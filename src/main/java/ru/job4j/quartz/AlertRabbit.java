@@ -12,32 +12,32 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 public class AlertRabbit {
 
-    private static Integer readFile(String adr) {
-        int rsl;
-        try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream(adr)) {
-            Properties config = new Properties();
+    private static Properties getConfig(String fileConf) {
+        Properties config = new Properties();
+        try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream(fileConf)) {
             config.load(in);
-            rsl = Integer.parseInt(config.getProperty("rabbit.interval"));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
-        return rsl;
+        return config;
     }
 
     public static void main(String[] args) {
         try {
+            Properties conf = getConfig("rabbit.properties");
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+            int interval = Integer.parseInt(conf.getProperty("rabbit.interval"));
             scheduler.start();
             JobDetail job = newJob(Rabbit.class).build();
             SimpleScheduleBuilder times = simpleSchedule()
-                    .withIntervalInSeconds(readFile("rabbit.properties"))
+                    .withIntervalInSeconds(interval)
                     .repeatForever();
             Trigger trigger = newTrigger()
                     .startNow()
                     .withSchedule(times)
                     .build();
             scheduler.scheduleJob(job, trigger);
-        } catch (SchedulerException se) {
+        } catch (Exception se) {
             se.printStackTrace();
         }
     }

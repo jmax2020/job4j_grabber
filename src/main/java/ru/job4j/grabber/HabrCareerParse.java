@@ -13,21 +13,25 @@ public class HabrCareerParse {
 
     private static final String SOURCE_LINK = "https://career.habr.com";
 
-    private static final String PAGE_LINK = String.format("%s/vacancies/java_developer", SOURCE_LINK);
+    private static final String PAGE_LINK = String.format("%s/vacancies/java_developer?page=", SOURCE_LINK);
 
     public static void main(String[] args) throws IOException {
-        Connection conn = Jsoup.connect(PAGE_LINK);
-        Document doc = conn.get();
-        Elements rows = doc.select(".vacancy-card__inner");
-        rows.forEach(row -> {
-            Element titleElement = row.select(".vacancy-card__title").first();
-            Element linkElement = titleElement.child(0);
-            String vacancyName = titleElement.text();
-            String link = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
-            Element titleData = row.select(".vacancy-card__date").first();
-            Element td = titleData.child(0);
-            String vacancyData =  td.attr("datetime");
-            System.out.printf("%s %s %s%n", vacancyData,  vacancyName, link);
-        });
+        for (int page = 1; page <= 5; page++) {
+            Connection conn = Jsoup.connect(String.format("%s%s", PAGE_LINK, page));
+            Document doc = conn.get();
+            Elements rows = doc.select(".vacancy-card__inner");
+            rows.forEach(row -> {
+                Element titleElement = row.select(".vacancy-card__title")
+                        .first();
+                Element linkElement = titleElement.child(0);
+                String vacancyName = titleElement.text();
+                String link = String.format("%s%s", SOURCE_LINK
+                        , linkElement.attr("href"));
+                Element titleData = row.select(".vacancy-card__date").first();
+                Element td = titleData.child(0);
+                String vacancyData = td.attr("datetime");
+                System.out.printf("%s %s %s%n", vacancyData, vacancyName, link);
+            });
+        }
     }
 }

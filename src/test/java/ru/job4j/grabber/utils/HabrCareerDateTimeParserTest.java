@@ -23,8 +23,7 @@ class HabrCareerDateTimeParserTest {
         String text = "2023-01-05";
         HabrCareerDateTimeParser hb = new HabrCareerDateTimeParser();
         LocalDateTime dat =  hb.parse(text);
-        LocalDateTime expectedDat = LocalDateTime.of(2023, 1, 5, 0, 0, 0);
-        assertThat(dat).isEqualTo(expectedDat);
+        assertNull(dat);
     }
 
     @Test

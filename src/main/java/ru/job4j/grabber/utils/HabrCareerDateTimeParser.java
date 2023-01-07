@@ -1,16 +1,14 @@
 package ru.job4j.grabber.utils;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class HabrCareerDateTimeParser implements DateTimeParser {
     @Override
     public LocalDateTime parse(String parse) {
-        String substr = parse;
-        if (parse.length() >= 19) {
-            substr = parse.substring(0, 19);
-        } else if (parse.length() >= 10) {
-            substr = String.format("%sT%s", parse.substring(0, 10), "00:00:00");
-        }
-        return (parse.length() < 10) ? null : LocalDateTime.parse(substr);
+        return parse.length() < 25
+                ? null : DateTimeFormatter.ISO_OFFSET_DATE_TIME
+                        .parse(parse, ZonedDateTime::from).toLocalDateTime();
     }
 }

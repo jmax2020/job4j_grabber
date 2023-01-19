@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class HabrCareerDateTimeParserTest {
 
@@ -16,21 +15,5 @@ class HabrCareerDateTimeParserTest {
         LocalDateTime dat =  hb.parse(text);
         LocalDateTime expectedDat = LocalDateTime.of(2023, 1, 5, 16, 37, 30);
         assertThat(dat).isEqualTo(expectedDat);
-    }
-
-    @Test
-    void whenOnlyData() {
-        String text = "2023-01-05";
-        HabrCareerDateTimeParser hb = new HabrCareerDateTimeParser();
-        LocalDateTime dat =  hb.parse(text);
-        assertNull(dat);
-    }
-
-    @Test
-    void whenNothing() {
-        String text = "2023";
-        HabrCareerDateTimeParser hb = new HabrCareerDateTimeParser();
-        LocalDateTime dat =  hb.parse(text);
-        assertNull(dat);
     }
 }

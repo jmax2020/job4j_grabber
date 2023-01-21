@@ -11,7 +11,6 @@ import ru.job4j.grabber.utils.HabrCareerDateTimeParser;
 import java.io.IOException;
 import java.util.List;
 
-
 public class HabrCareerParse implements Parse {
 
     private final DateTimeParser dateTimeParser;

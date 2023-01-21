@@ -7,9 +7,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.List;
 
 
-public class HabrCareerParse {
+public class HabrCareerParse implements Parse {
 
     private static final String SOURCE_LINK = "https://career.habr.com";
 
@@ -22,7 +23,9 @@ public class HabrCareerParse {
         return row.text();
     }
 
-    public static void main(String[] args) throws IOException {
+    @Override
+    public List<Post> list(String link) throws IOException {
+
         for (int page = 1; page <= 5; page++) {
             Connection conn = Jsoup.connect(String.format("%s%s", PAGE_LINK, page));
             Document doc = conn.get();
@@ -32,19 +35,27 @@ public class HabrCareerParse {
                         .first();
                 Element linkElement = titleElement.child(0);
                 String vacancyName = titleElement.text();
-                String link = String.format("%s%s", SOURCE_LINK
-                        , linkElement.attr("href"));
+                String lnk = String.format("%s%s", SOURCE_LINK,
+                        linkElement.attr("href"));
                 String description;
                 try {
-                    description = retrieveDescription(link);
+                    description = retrieveDescription(lnk);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
                 Element titleData = row.select(".vacancy-card__date").first();
                 Element td = titleData.child(0);
                 String vacancyData = td.attr("datetime");
-                System.out.printf("%s %s %s %s%n", vacancyData, vacancyName, link, description);
+                System.out.printf("%s %s %s %s%n", vacancyData, vacancyName, lnk, description);
             });
         }
+        return null;
+    }
+
+    public static void main(String[] args) throws IOException {
+        HabrCareerParse hcp = new HabrCareerParse();
+        List<Post> list = hcp.list("ddd");
+        list.forEach(System.out::println);
+
     }
 }

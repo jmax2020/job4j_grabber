@@ -25,7 +25,6 @@ public class Post {
     @Override
     public int hashCode() {
         return Objects.hash(Objects.hash(13 * id) + (17 * link.hashCode()));
-
     }
 
     @Override

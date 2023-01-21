@@ -8,8 +8,7 @@ public class HabrCareerDateTimeParser implements DateTimeParser {
     public LocalDateTime parse(String parse) {
         try {
             return ZonedDateTime.parse(parse).toLocalDateTime();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

@@ -12,12 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HabrCareerParse implements Parse {
-    private final DateTimeParser dateTimeParser;
     private static final int MAXPAGE = 5;
-    private static int id = 1;
     private static final String SOURCE_LINK = "https://career.habr.com";
-
     private static final String PAGE_LINK = String.format("%s/vacancies/java_developer?page=", SOURCE_LINK);
+    private final DateTimeParser dateTimeParser;
 
     public HabrCareerParse(DateTimeParser dateTimeParser) {
         this.dateTimeParser = dateTimeParser;
@@ -31,30 +29,34 @@ public class HabrCareerParse implements Parse {
     }
 
     @Override
-    public List<Post> list(String link) throws IOException {
+    public List<Post> list(String link) {
         List<Post> posts = new ArrayList<>();
         for (int page = 1; page <= MAXPAGE; page++) {
             Connection conn = Jsoup.connect(String.format("%s%s", link, page));
-            Document doc = conn.get();
-            Elements rows = doc.select(".vacancy-card__inner");
-            rows.forEach(row -> {
-                Element titleElement = row.select(".vacancy-card__title")
-                        .first();
-                Element linkElement = titleElement.child(0);
-                String vacancyName = titleElement.text();
-                String lnk = String.format("%s%s", SOURCE_LINK,
-                        linkElement.attr("href"));
-                String description;
-                try {
-                    description = retrieveDescription(lnk);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                Element titleData = row.select(".vacancy-card__date").first();
-                Element td = titleData.child(0);
-                String vacancyData = td.attr("datetime");
-                posts.add(new Post(id++, vacancyName, lnk, description, dateTimeParser.parse(vacancyData)));
-            });
+            try {
+                Document doc = conn.get();
+                Elements rows = doc.select(".vacancy-card__inner");
+                rows.forEach(row -> {
+                    Element titleElement = row.select(".vacancy-card__title")
+                            .first();
+                    Element linkElement = titleElement.child(0);
+                    String vacancyName = titleElement.text();
+                    String lnk = String.format("%s%s", SOURCE_LINK,
+                            linkElement.attr("href"));
+                    String description;
+                    try {
+                        description = retrieveDescription(lnk);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Element titleData = row.select(".vacancy-card__date").first();
+                    Element td = titleData.child(0);
+                    String vacancyData = td.attr("datetime");
+                    posts.add(new Post(vacancyName, lnk, description, dateTimeParser.parse(vacancyData)));
+                });
+            } catch (IOException e) {
+                throw new IllegalArgumentException();
+            }
         }
         return posts;
     }

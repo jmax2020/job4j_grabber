@@ -4,7 +4,7 @@ create table post(
     unique (link),
     name text,
 	text text,
-    created date
+    created timestamp
 );
 
 

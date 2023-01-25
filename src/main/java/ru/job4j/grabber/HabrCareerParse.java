@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HabrCareerParse implements Parse {
-
     private final DateTimeParser dateTimeParser;
     private static final int MAXPAGE = 5;
     private static int id = 1;

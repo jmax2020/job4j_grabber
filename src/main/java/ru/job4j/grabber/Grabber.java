@@ -18,6 +18,7 @@ import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 
 public class Grabber implements Grab {
+    public static final String KODER = "Windows-1251";
     private final Properties cfg = new Properties();
 
     public Store store() {
@@ -45,7 +46,7 @@ public class Grabber implements Grab {
                     try (OutputStream out = socket.getOutputStream()) {
                         out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
                         for (Post post : store.getAll()) {
-                            out.write(post.toString().getBytes(Charset.forName("Windows-1251")));
+                            out.write(post.toString().getBytes(Charset.forName(KODER)));
                             out.write(System.lineSeparator().getBytes());
                             out.write(System.lineSeparator().getBytes());
                         }

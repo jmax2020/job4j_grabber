@@ -79,13 +79,13 @@ public class Grabber implements Grab {
     }
 
     public static class GrabJob implements Job {
-
+        private static final String LINK = "https://career.habr.com/vacancies/java_developer?page=";
         @Override
         public void execute(JobExecutionContext context) {
             JobDataMap map = context.getJobDetail().getJobDataMap();
             Store store = (Store) map.get("store");
             Parse parse = (Parse) map.get("parse");
-            List<Post> list = parse.list("https://career.habr.com/vacancies/java_developer?page=");
+            List<Post> list = parse.list(LINK);
             list.forEach(store::save);
         }
     }

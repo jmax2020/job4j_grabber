@@ -26,5 +26,4 @@ select p.id, p.name, c.name from person as p join company as c on p.company_id =
 
 select  c.name, count(p.company_id) from person p join company c
 on p.company_id = c.id group by c.name order by count(p.company_id) desc
-FETCH FIRST 1 ROW WITH TIES ;
-
+FETCH FIRST 1 ROW WITH TIES;
